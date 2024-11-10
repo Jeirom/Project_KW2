@@ -49,7 +49,7 @@ if __name__ == "__main__":
         sorted_vacancies = sort_vacancies(ranged_vacancies)
         top_vacancies = get_top_vacancies(
             sorted_vacancies, top_n
-        )  # (sorted_vacancies, top_n)
+        )
 
         print_vacancies(top_vacancies)
 

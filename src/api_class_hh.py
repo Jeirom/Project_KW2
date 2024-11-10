@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import AnyStr
-
+import requests
 
 class AbstractAPI(ABC):
     """Абстрактный класс для работы с API"""

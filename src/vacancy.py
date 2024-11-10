@@ -34,7 +34,7 @@ class Vacancy(VacancyABC):
         """Инициализация объектов класса"""
         self.name = name
         self.alternate_url = alternate_url
-        self.salary = self._validation_salary(salary)
+        self.salary = self.__validation_salary(salary)
         self.requirement = self.__validation_requirement(requirement)
         self.responsibility = responsibility  # snippet
         self.schedule = schedule  # schedule - name
