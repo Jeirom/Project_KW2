@@ -1,20 +1,22 @@
 import json
-
-from json import JSONDecodeError
-from src.vacancy import Vacancy
 import os
-from typing import List, Dict, Any
-
-from src.abs_file_handler import AbstractFileHandler
+from json import JSONDecodeError
+from typing import Any, AnyStr
 
 
 class JSONSaver:
+    """Класс сохранения данных в файл"""
 
-    def __init__(self, name="data.json"):
+    name: str
+    path: str
+
+    def __init__(self, name="data.json") -> None:
+        """Метод инициализации. Есть статичный параметр"""
         self.name = name
         self.path = os.path.join(os.path.dirname(__file__), "..", "data", self.name)
 
-    def open_json(self):
+    def open_json(self) -> list:
+        """Функция открытия файла. В случае ошибки придет уведомление"""
         try:
             with open(self.path) as f:
                 return json.load(f)
@@ -24,7 +26,8 @@ class JSONSaver:
             print(e)
             return []
 
-    def add_vacancy(self, vacancy):
+    def add_vacancy(self, vacancy: AnyStr) -> str:
+        """Функция добавления вакансии в конец списка файла"""
         vacancy_list = self.open_json()
         new_list = []
         for vacancy_dict in vacancy_list:
@@ -36,15 +39,16 @@ class JSONSaver:
         else:
             return "Данная вакансия уже существует"
 
-    def delete_vacancy(self, vacancy):
+    def delete_vacancy(self, vacancy: Any) -> str:
+        """Функция удаления вакансии из файла"""
         open_json = self.open_json()
         new_list_url = []
         for vacancy_dict in open_json:
             new_list_url.append(vacancy_dict.get("alternate_url"))
         if vacancy.alternate_url in new_list_url:
             for i in range(len(open_json)):
-                if open_json[i-1]['alternate_url'] == vacancy.alternate_url:
-                    del open_json[i-1]
+                if open_json[i - 1]["alternate_url"] == vacancy.alternate_url:
+                    del open_json[i - 1]
         else:
             return "Вакансия не найдена."
 

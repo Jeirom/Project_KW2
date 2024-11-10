@@ -1,6 +1,5 @@
-import requests
 from abc import ABC, abstractmethod
-
+from typing import AnyStr
 
 
 class AbstractAPI(ABC):
@@ -11,7 +10,7 @@ class AbstractAPI(ABC):
         pass
 
     @abstractmethod
-    def get_vacancies(self, keyword: str, per_page: int = 20):
+    def get_vacancies(self, keyword: str, per_page: int = 20) -> AnyStr:
         pass
 
 
@@ -19,6 +18,7 @@ class HeadHunterAPI(AbstractAPI):
     """Класс для работы с hh.ru"""
 
     def __init__(self):
+        """Инициализатор"""
         self.__base_url = "https://api.hh.ru/vacancies"
 
     def _connect(self) -> None:
@@ -27,7 +27,7 @@ class HeadHunterAPI(AbstractAPI):
         if response.status_code != 200:
             raise Exception("Не удалось подключиться к API")
 
-    def get_vacancies(self, keyword: str, per_page: int = 20):
+    def get_vacancies(self, keyword: str, per_page: int = 20) -> AnyStr:
         """Метод получения вакансий по ключевому слову"""
         self._connect()
         params = {"text": keyword, "per_page": per_page}
