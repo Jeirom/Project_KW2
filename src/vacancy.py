@@ -1,20 +1,19 @@
 from typing import Any
 
-class Vacancy:
-    """Основной класс - вакансия. Принимает несколько атрибутов \ отбора данных для создания ответа для юзера"""
+from src.abstract_class import Parser, VacancyABC
+
+
+class Vacancy(VacancyABC):
     name: str
     alternate_url: str
+    salary: int
     requirement: str
     responsibility: str
     schedule: str
-    salary: int
 
     __slots__ = ("name", "alternate_url", "salary", "requirement", "responsibility", "schedule")
-    """Маг. метод для ограничения количества и различности значений у атрибутов"""
 
-    def __init__(self, name: str, alternate_url: str, requirement: str,
-                 responsibility: str, schedule: str, salary: str):
-        """Инициализатор. Сюда уже залетают значения из Vacancy.__slots__"""
+    def __init__(self, name, alternate_url, salary, requirement, responsibility, schedule):
         self.name = name
         self.alternate_url = alternate_url
         self.salary = self.__validation_salary(salary)
@@ -23,7 +22,15 @@ class Vacancy:
         self.schedule = schedule  # schedule - name
 
     def __str__(self):
-        """Маг.метод стр. Нужен для заказа картошечки фри. """
+        return (f"Вакансия: {self.name}\n"
+                f"Ссылка: {self.alternate_url}\n"
+                f"Зарплата: {self.salary}\n"
+                f"Требования: {self.requirement}\n"
+                f"Ответственность: {self.responsibility}\n"
+                f"График: {self.schedule}\n"
+                )
+
+    def __repr__(self):
         return (f"Вакансия: {self.name}\n"
                 f"Ссылка: {self.alternate_url}\n"
                 f"Зарплата: {self.salary}\n"
@@ -33,22 +40,19 @@ class Vacancy:
                 )
 
     @staticmethod
-    def __validation_salary(salary: Any) -> Any:
-        """Проверка на наличия значения у salary(зп). False = значение будет 'Не указана'."""
+    def __validation_salary(salary):
         if salary:
             return salary
         return "Не указана"
 
     @staticmethod
-    def __validation_requirement(requirement: Any) -> Any:
-        """То же самое что и __validation_salary, только значение другое"""
+    def __validation_requirement(requirement):
         if requirement:
             return requirement
         return "Не указаны"
 
     @classmethod
-    def cast_to_object_list(cls, vacancies: list) -> list[dict]:
-        """Прогоняет исходник по различным проверкам, выдает новый список с отобранными вакансиями"""
+    def cast_to_object_list(cls, vacancies: list):
         new_list = []
         for vacancy in vacancies:
             name = vacancy.get("name")
@@ -83,25 +87,13 @@ class Vacancy:
             new_list.append(dict_vac)
         return new_list
 
-    def __repr__(self):
-        """Выводит значения атрибутов в терминал. Этот репр нужен для отладки"""
-        return (f"Вакансия: {self.name}\n"
-                f"Ссылка: {self.alternate_url}\n"
-                f"Зарплата: {self.salary}\n"
-                f"Требования: {self.requirement}\n"
-                f"Ответственность: {self.responsibility}\n"
-                f"График: {self.schedule}\n"
-                )
-
     @classmethod
     def __isinstance_data(cls, other):
-        """Проверочка что все в одном классе"""
         if not isinstance(other, Vacancy):
             raise TypeError("Операнд справа должен быть экземпляром класса Vacancy")
         else:
             return other.salary
 
-    #Магические методы ниже: различные сценарии проверки зарплат у сотрудников
     def __eq__(self, other):
         sal_1 = self.__isinstance_data(other)
         return self.salary == sal_1
@@ -114,7 +106,7 @@ class Vacancy:
         sal_3 = self.__isinstance_data(other)
         return self.salary <= sal_3
 
-    def to_dict(self) -> dict:
+    def to_dict(self):
         """Возвращает словарь с данными о вакансии из экземпляра класса Vacancy"""
         return {"name": self.name, "alternate_url": self.alternate_url, "salary": self.salary,
                 "requirement": self.requirement}

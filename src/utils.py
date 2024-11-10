@@ -2,13 +2,6 @@ from src.api_class_hh import HeadHunterAPI
 from src.vacancy import Vacancy
 from typing import Any
 
-def get_top_vacancies(sorted_vacancies, top_n):
-    """Топ вакансий"""
-    if top_n == '':
-        return sorted_vacancies
-    else:
-        return sorted_vacancies[0:int(top_n)]
-
 def filter_vacancies(vacancies_list, filter_words):
     """Фильтрация вакансий по ключевому слову"""
     filter_list_new = []
@@ -18,18 +11,21 @@ def filter_vacancies(vacancies_list, filter_words):
                 filter_list_new.append(vac)
     return filter_list_new
 
+
 def get_vacancies_by_salary(filtered_vacancies, salary_range):
-    salary_list = salary_range.split(" - ")
+    salary_list = salary_range.split("-")
+    # print(salary_list)
     new_list = []
     for vac in filtered_vacancies:
         if int(salary_list[0]) <= vac["salary"] <= int(salary_list[1]):
             new_list.append(vac)
     return new_list
 
-def sort_vacancies(vacancies_list: Any) -> list:
-    """Сортировка вакансий по зарплате. Больше зп - выше место в списке"""
+
+def sort_vacancies(vacancies_list):
     sorted_vacancies = sorted(vacancies_list, key=lambda vacancies_list: vacancies_list["salary"], reverse=True)
     return sorted_vacancies
+
 
 def get_top_vacancies(sorted_vacancies, top_n):
     """Топ вакансий"""
@@ -38,14 +34,14 @@ def get_top_vacancies(sorted_vacancies, top_n):
     else:
         return sorted_vacancies[0:int(top_n)]
 
+
 def print_vacancies(top_vacancies):
-    """Принтует конечный результат в терминал."""
-    pass
-
-
-if __name__ == "__main__":
-    hh_api = HeadHunterAPI()
-
-    hh_vacancies = hh_api.load_vacancies("Python")
-
-    vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
+    dict_vac = []
+    for vac in top_vacancies:
+        dict_vac.append(f"\nВакансия: {vac.get('name')}\n"
+                        f"Ссылка: {vac.get('alternate_url')}\n"
+                        f"Зарплата: {vac.get('salary')}\n"
+                        f"Требования: {vac.get('requirement')}\n"
+                        f"Ответственность: {vac.get('responsibility')}\n"
+                        f"График: {vac.get('schedule')}\n"
+                        f"{'--'*20}")
